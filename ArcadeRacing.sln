@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1022
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcadeRacing", "ArcadeRacing\ArcadeRacing.csproj", "{D0EADDAB-7DB5-428D-8B40-AD3E7655BAFA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D0EADDAB-7DB5-428D-8B40-AD3E7655BAFA}.Debug|x86.ActiveCfg = Debug|x86
+		{D0EADDAB-7DB5-428D-8B40-AD3E7655BAFA}.Debug|x86.Build.0 = Debug|x86
+		{D0EADDAB-7DB5-428D-8B40-AD3E7655BAFA}.Release|x86.ActiveCfg = Release|x86
+		{D0EADDAB-7DB5-428D-8B40-AD3E7655BAFA}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DBB65921-37CE-446B-A712-1017580AAF2B}
+	EndGlobalSection
+EndGlobal
