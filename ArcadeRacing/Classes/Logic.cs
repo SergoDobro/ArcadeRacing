@@ -13,7 +13,7 @@ namespace ArcadeRacing.Classes
         List<Car> cars = new List<Car>();
         Player player = new Player();
 
-        int renderDistance = 100;
+        int renderDistance = 50;
         int currentSegment;
         public void MainGaemClass()
         {
@@ -27,19 +27,40 @@ namespace ArcadeRacing.Classes
                 AddSegment();
             }
         }
+        public float prev;
+        public float dz = 0;
         public void Update()
         {
             UpdateSegments();
             CheckCarToCarCollisions();
             CheckCarToObjectCollision();
 
-            player.GetZ += 1;
-            AddSegment();
-        }
+            player.GetZ += 0.01f;
+            if (player.GetZ - prev >= Segment.segmentLength)
+            {
+                prev = player.GetZ;
 
+                AddSegment();
+                //segments.RemoveAt(0);
+                //for (int i = 0; i < 5; i++)
+                //{
+                //    if (player.GetZ - segments[0].z > Segment.segmentLength+ Segment.segmentLength)
+                //    {
+                //        AddSegment();
+                //        segments.RemoveAt(0);
+                //    }
+                //    else
+                //    {
+                //        break;
+                //    }
+                //}
+            }
+        }
+        float k = 0;
         public void AddSegment()
         {
-            segments.Add(new Segment());
+            segments.Add(new Segment(k, graphicsDevice, (float)Math.Sin(k * 0.05f)));
+            k += Segment.segmentLength;
         }
 
         public void CheckCollisions()

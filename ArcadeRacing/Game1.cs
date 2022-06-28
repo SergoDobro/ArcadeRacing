@@ -7,6 +7,7 @@ namespace ArcadeRacing
 {
     public class Game1 : Game
     {
+                
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         MainGameClass mainGame;
@@ -15,6 +16,10 @@ namespace ArcadeRacing
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            //_graphics.PreferredBackBufferWidth = 800;
+            //_graphics.PreferredBackBufferHeight = 480;
+
             mainGame = new MainGameClass();
         }
 
@@ -29,7 +34,8 @@ namespace ArcadeRacing
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            mainGame.graphicsDevice = GraphicsDevice;
+            mainGame.Start();
         }
 
         protected override void Update(GameTime gameTime)
