@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using ArcadeRacing.Classes;
 namespace ArcadeRacing
 {
     /// <summary>
@@ -12,10 +12,14 @@ namespace ArcadeRacing
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        MainGameClass mainGame;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            mainGame = new MainGameClass();
         }
 
         /// <summary>
@@ -62,7 +66,7 @@ namespace ArcadeRacing
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            mainGame.Update();
 
             base.Update(gameTime);
         }
@@ -75,7 +79,11 @@ namespace ArcadeRacing
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            {
+                mainGame.Render(GraphicsDevice);
+            }
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

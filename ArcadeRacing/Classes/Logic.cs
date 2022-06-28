@@ -11,22 +11,35 @@ namespace ArcadeRacing.Classes
         List<Segment> segments = new List<Segment>();
         List<IGameObject> gameObjects = new List<IGameObject>();
         List<Car> cars = new List<Car>();
-        Player player;
+        Player player = new Player();
 
         int renderDistance = 100;
         int currentSegment;
+        public void MainGaemClass()
+        {
+            Start();
+        }
 
+        public void Start()
+        {
+            for (int i = 0; i < renderDistance; i++)
+            {
+                AddSegment();
+            }
+        }
         public void Update()
         {
             UpdateSegments();
             CheckCarToCarCollisions();
             CheckCarToObjectCollision();
+
+            player.GetZ += 1;
+            AddSegment();
         }
 
         public void AddSegment()
         {
-
-
+            segments.Add(new Segment());
         }
 
         public void CheckCollisions()

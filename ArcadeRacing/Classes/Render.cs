@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,24 +9,24 @@ namespace ArcadeRacing.Classes
 {
     partial class MainGameClass
     {
-        public void Draw()
+        public void Render(GraphicsDevice graphicsDevice)
         {
-            RenderSegments();
+            RenderSegments(graphicsDevice);
             RenderObjects();
         }
 
-        public void RenderSegments()
+        private void RenderSegments(GraphicsDevice graphicsDevice)
         {
             for (int i = currentSegment; i < renderDistance + currentSegment && i < segments.Count; i++)
             {
-                segments[i].RenderSegment(player.GetX, player.GetZ);
+                segments[i].RenderSegment(player.GetX, player.GetZ, graphicsDevice);
             }
         }
-        public void RenderPlayer()
+        private void RenderPlayer()
         {
             player.RenderPlayer();
         }
-        public void RenderEnemyCars()
+        private void RenderEnemyCars()
         {
             var carsOrdered = cars.OrderBy(x=>x.GetZ);
             foreach (var car in carsOrdered)
@@ -36,7 +37,7 @@ namespace ArcadeRacing.Classes
                 }
             }
         }
-        public void RenderObjects()
+        private void RenderObjects()
         {
             //var gameObjectsByDistance = gameObjects.OrderBy(x=>x.GetZPos());
             foreach (var gameObject in gameObjects)
