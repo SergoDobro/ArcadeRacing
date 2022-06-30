@@ -14,7 +14,7 @@ namespace ArcadeRacing.Classes
 
         public bool IsIntersecting(Car car)
         {
-            return false;
+            return Math.Abs(car.GetX - pos_x) < 2 && Math.Abs(car.GetZ - pos_z) < 2;
         }
         public void Killed()
         {

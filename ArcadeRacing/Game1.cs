@@ -36,6 +36,7 @@ namespace ArcadeRacing
 
             mainGame.graphicsDevice = GraphicsDevice;
             mainGame.Start();
+            mainGame.LoadContent(GraphicsDevice);
         }
 
         protected override void Update(GameTime gameTime)
@@ -43,7 +44,7 @@ namespace ArcadeRacing
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            mainGame.Update();
+            mainGame.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -54,7 +55,7 @@ namespace ArcadeRacing
 
             _spriteBatch.Begin();
             {
-                mainGame.Render(GraphicsDevice);
+                mainGame.Render(GraphicsDevice, _spriteBatch);
             }
             _spriteBatch.End();
 
