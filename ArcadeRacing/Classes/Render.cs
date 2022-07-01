@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ArcadeRacing.Classes.GameObjects;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,23 @@ namespace ArcadeRacing.Classes
     {
         public const int SegentDistructorMult = 4;
         public GraphicsDevice graphicsDevice;
-        public void LoadContent(GraphicsDevice graphicsDevice)
+
+        public void LoadContent(GraphicsDevice graphicsDevice, Microsoft.Xna.Framework.Content.ContentManager content)
         {
+            BillBoard.LoadTexture(content.Load<Texture2D>("banner"));
+            BillBoard.LoadTexture(content.Load<Texture2D>("pts"));
+
             GlobalRenderSettings.LoadGlobalRenderSettings(graphicsDevice);
             Segment.LoadSegmentation(graphicsDevice);
             GameObject.LoadRendering(graphicsDevice);
+
+
+            int z = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                z += random.Next(10,100);
+                AddGameOblects(z);
+            }
         }
         public void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
@@ -36,7 +49,7 @@ namespace ArcadeRacing.Classes
                 }
                 else
                 {
-                    curviture = segments[i].curveture * (player.GetX - (player.GetX*10)%10);
+                    //curviture = segments[i].curveture * (player.GetZ - (player.GetZ * 10) % 10);
                 }
                 //System.Text.Json.
             }
@@ -70,6 +83,8 @@ namespace ArcadeRacing.Classes
                 if (segments[i].z - player.GetZ > Segment.segmentLength * SegentDistructorMult)
                 {
                     ind = i;
+                    float inter = (player.GetZ - ((player.GetZ * 10) % 10));
+                    //curviture = segments[i].curveture * inter + (1- inter)* segments[i+1].curveture;
                     break;
                 }
             }

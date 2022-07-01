@@ -15,7 +15,7 @@ namespace ArcadeRacing.Classes
         List<GameObject> gameObjects = new List<GameObject>();
         List<Car> cars = new List<Car>();
         Player player = new Player();
-
+        Random random = new Random();
         int renderDistance = 500;
         int currentSegment;
         public void MainGaemClass()
@@ -25,10 +25,6 @@ namespace ArcadeRacing.Classes
 
         public void Start()
         {
-            for (int i = 0; i < 100; i++)
-            {
-                AddGameOblects(i*5);
-            }
             for (int i = 0; i < renderDistance; i++)
             {
                 AddSegment();
@@ -75,7 +71,7 @@ namespace ArcadeRacing.Classes
                 prev = player.GetZ;
                 for (int i = 0; i < 30; i++)
                 {
-                    if (segments[0].z - player.GetZ < Segment.segmentLength * SegentDistructorMult)
+                    if (segments[0].z - player.GetZ < Segment.segmentLength * (SegentDistructorMult-1))
                     {
                         AddSegment();
                         segments.RemoveAt(0);
@@ -98,7 +94,8 @@ namespace ArcadeRacing.Classes
         }
         public void AddGameOblects(int z)
         {
-            gameObjects.Add(new BillBoard() { GetZ = z });
+            BillBoard bb = new BillBoard() { GetZ = z };
+            gameObjects.Add(bb);
         }
         public void CheckCollisions()
         {

@@ -36,7 +36,7 @@ namespace ArcadeRacing
 
             mainGame.graphicsDevice = GraphicsDevice;
             mainGame.Start();
-            mainGame.LoadContent(GraphicsDevice);
+            mainGame.LoadContent(GraphicsDevice, Content);
         }
 
         protected override void Update(GameTime gameTime)
