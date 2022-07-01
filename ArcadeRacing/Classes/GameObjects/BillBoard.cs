@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,18 +8,19 @@ namespace ArcadeRacing.Classes.GameObjects
 {
     class BillBoard : GameObject
     {
-        public static Random random = new Random();
         public static List<Texture2D> BillBords = new List<Texture2D>();
-        public static void LoadTexture(Texture2D texture2D)
+        public static void LoadTexture(ContentManager content)
         {
-            BillBords.Add(texture2D);
+            BillBords.Add(content.Load<Texture2D>("banner"));
+            BillBords.Add(content.Load<Texture2D>("pts"));
         }
-        public BillBoard()
+        public BillBoard(float z)
         {
             objectWidth = 8;
             objectHeight = 16;
-            GetX = (random.Next(0, 2) - 0.5f) * 2 * 8;
-            texture = BillBords[1];//random.Next(0, BillBords.Count)];
+            GetZ = z;
+            GetX = (random.Next(0, 2) - 0.5f) * 2 *( objectWidth +2 );
+            texture = BillBords[random.Next(0, BillBords.Count)];
         }
     }
 }

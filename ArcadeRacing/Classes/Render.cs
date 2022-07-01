@@ -13,35 +13,40 @@ namespace ArcadeRacing.Classes
     {
         public const int SegentDistructorMult = 4;
         public GraphicsDevice graphicsDevice;
-
+        private Background background;
         public void LoadContent(GraphicsDevice graphicsDevice, Microsoft.Xna.Framework.Content.ContentManager content)
         {
-            BillBoard.LoadTexture(content.Load<Texture2D>("banner"));
-            BillBoard.LoadTexture(content.Load<Texture2D>("pts"));
+            BillBoard.LoadTexture(content);
+            Obsticle.LoadTexture(content);
 
             GlobalRenderSettings.LoadGlobalRenderSettings(graphicsDevice);
             Segment.LoadSegmentation(graphicsDevice);
             GameObject.LoadRendering(graphicsDevice);
+            background = new Background();
+            background.LoadContent(content, graphicsDevice);
 
-
-            int z = 0;
+            int _z = 0;
             for (int i = 0; i < 100; i++)
             {
-                z += random.Next(10,100);
-                AddGameOblects(z);
+                _z += random.Next(10,14);
+                AddGameOblect(_z);
             }
         }
         public void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
+            spriteBatch.Begin();
+            RenderBackground(spriteBatch);
+            spriteBatch.End();
             RenderSegments(graphicsDevice);
+            spriteBatch.Begin();
             RenderObjects(spriteBatch);
+            spriteBatch.End();
         }
 
         private void RenderSegments(GraphicsDevice graphicsDevice)
         {
-            float curviture = 0;//segments[0].curveture * (1-(player.GetZ - prev));
-            //segments[1].RenderSegment(player.GetX, player.GetZ, graphicsDevice, segments[0].curveture, out c);
-            for (int i = 0; i < renderDistance + currentSegment && i < segments.Count; i++)
+            float curviture = 0;
+            for (int i = 0; i < renderDistance && i < segments.Count; i++)
             {
                 if (segments[i].z - player.GetZ > Segment.segmentLength * SegentDistructorMult)
                 {
@@ -51,7 +56,6 @@ namespace ArcadeRacing.Classes
                 {
                     //curviture = segments[i].curveture * (player.GetZ - (player.GetZ * 10) % 10);
                 }
-                //System.Text.Json.
             }
         }
         private void RenderPlayer()
@@ -69,26 +73,25 @@ namespace ArcadeRacing.Classes
                 }
             }
         }
+        Stack<(Texture2D, Rectangle)> objectRenderStack = new Stack<(Texture2D, Rectangle)>();
         private void RenderObjects(SpriteBatch spriteBatch)
         {
-
-            
-
             float cz = 0;
             int ind = 0;
             float curviture = 0;
 
-            for (int i = 0; i < renderDistance + currentSegment && i < segments.Count; i++)
+            for (int i = 0; i < renderDistance && i < segments.Count; i++)
             {
-                if (segments[i].z - player.GetZ > Segment.segmentLength * SegentDistructorMult)
+                if (segments[i].z - player.GetZ > Segment.segmentLength * (SegentDistructorMult-3))
                 {
                     ind = i;
-                    float inter = (player.GetZ - ((player.GetZ * 10) % 10));
-                    //curviture = segments[i].curveture * inter + (1- inter)* segments[i+1].curveture;
+                    float inter = (((player.GetZ * 10) % 10)/10f);
+                    System.Diagnostics.Debug.WriteLine(inter);
+                    //curviture = segments[i+1].curveture * inter + (1- inter)* segments[i].curveture;
                     break;
                 }
             }
-
+            objectRenderStack.Clear();
             foreach (var gameObject in gameObjects)
             {
                 if (gameObject.GetZ - player.GetZ > 0 && gameObject.GetZ - player.GetZ<segments.Count * Segment.segmentLength-5)
@@ -99,19 +102,17 @@ namespace ArcadeRacing.Classes
                         curviture += segments[ind].curveture;
                         ind++;
                     }
-                    gameObject.Render(player.GetX, player.GetZ, curviture, spriteBatch);
+                    gameObject.Render(player.GetX, player.GetZ, curviture, spriteBatch, objectRenderStack);
                 }
             }
-
-
-
-            //foreach (var gameObject in gameObjects)
-            //{
-            //    if (gameObject.GetZ - player.GetZ > 0)
-            //    {
-            //        gameObject.Render(player.GetX, player.GetZ, GetAllPrevCurves(), spriteBatch);
-            //    }
-            //}
+            foreach (var obj in objectRenderStack)
+            {
+                spriteBatch.Draw(obj.Item1, obj.Item2, Color.White);
+            }
+        }
+        private void RenderBackground(SpriteBatch spriteBatch)
+        {
+            background.Render(spriteBatch, curvetureTotal);
         }
     }
     public class GlobalRenderSettings
@@ -138,12 +139,12 @@ namespace ArcadeRacing.Classes
     {
         static int width = 800;
         static int height = 480;
+        const float sizeX = 2.3f;
+        const float sizeY = 4.1f;
         public static float ConvertToMono_x(this float x)
         {
             return ((x+ sizeX) /(2* sizeX)) * width;
         }
-        const float sizeX = 2;
-        const float sizeY = 4.1f;
         public static float ConvertToMono_y(this float y)
         {
             return ((sizeY - y) / (sizeY*2)) * height;

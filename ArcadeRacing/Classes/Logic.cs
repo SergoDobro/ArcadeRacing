@@ -11,18 +11,20 @@ namespace ArcadeRacing.Classes
 {
     partial class MainGameClass
     {
-        List<Segment> segments = new List<Segment>();
-        List<GameObject> gameObjects = new List<GameObject>();
-        List<Car> cars = new List<Car>();
-        Player player = new Player();
-        Random random = new Random();
-        int renderDistance = 500;
-        int currentSegment;
+        private List<Segment> segments = new List<Segment>();
+        private List<GameObject> gameObjects = new List<GameObject>();
+        private List<Car> cars = new List<Car>();
+        private Player player = new Player();
+        private Random random = new Random();
+        private float prev;
+        private float dz = 0;
+        private float curvetureTotal = 0;
+        private float k = 0;
+        private int renderDistance = 500;
         public void MainGaemClass()
         {
             Start();
         }
-
         public void Start()
         {
             for (int i = 0; i < renderDistance; i++)
@@ -30,42 +32,16 @@ namespace ArcadeRacing.Classes
                 AddSegment();
             }
         }
-        public float prev;
-        public float dz = 0;
-        public float speed = 0f;
-        public const float maxSpeed = 20;
-        public float movecoef = 2;
-        public float accelaration = maxSpeed / 5;
-        public float decel = -maxSpeed / 5;
         public void Update(GameTime gameTime)
         {
-            System.Diagnostics.Debug.WriteLine(player.GetZ);
+            //System.Diagnostics.Debug.WriteLine(player.GetZ);
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             UpdateSegments();
             CheckCarToCarCollisions();
             CheckCarToObjectCollision();
 
-            player.GetX += -dt * segments[0].curveture  * movecoef/2 * speed / maxSpeed;
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
-                speed += dt * accelaration;
-                if (speed > maxSpeed) 
-                    speed = maxSpeed;
-            }
-            else
-            {
-                speed += dt*decel;
-                if (speed<0)
-                {
-                    speed = 0;
-                }
-            }
+            player.Update(dt, segments[0].curveture);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.D)) player.GetX += dt * movecoef * speed / maxSpeed;
-            if (Keyboard.GetState().IsKeyDown(Keys.A)) player.GetX -= dt * movecoef * speed / maxSpeed;
-
-            player.GetZ += dt * speed;
-            player.GetX = Math.Clamp(player.GetX, -2, 2);
             if (player.GetZ - prev >= Segment.segmentLength)
             {
                 prev = player.GetZ;
@@ -74,8 +50,7 @@ namespace ArcadeRacing.Classes
                     if (segments[0].z - player.GetZ < Segment.segmentLength * (SegentDistructorMult-1))
                     {
                         AddSegment();
-                        segments.RemoveAt(0);
-                        
+                        RemoveSegment();
                     }
                     else
                     {
@@ -84,18 +59,41 @@ namespace ArcadeRacing.Classes
                 }
             }
         }
-        float k = 0;
         public void AddSegment()
         {
             segments.Add(new Segment(k, 
-                (float)(Math.Sin(k * 0.15f)* Math.Sin(k * 0.15f)* Math.Cos(k * 0.2f) * Math.Sin(k * 0.002f))
+                (float)(Math.Sin(k * 0.15f)* Math.Sin(k * 0.15f)* Math.Cos(k * 0.2f) * Math.Sin(k * 0.002f))/2
                 ));
             k += Segment.segmentLength;
         }
-        public void AddGameOblects(int z)
+        public void RemoveSegment()
         {
-            BillBoard bb = new BillBoard() { GetZ = z };
-            gameObjects.Add(bb);
+            curvetureTotal += segments[0].curveture;
+            segments.RemoveAt(0);
+        }
+        public void AddGameOblect(int z)
+        {
+            GameObject gameObject;
+            int ob = random.Next(0, 2);
+            switch (ob)
+            {
+                case 0:
+                    gameObjects.Add(new BillBoard(z));
+                    break;
+                case 1:
+                    if (Math.Abs(segments[0].curveture)<0.3f)
+                    {
+                        //int pos = random.Next(0, 2);
+                        for (int i = 0; i < 20; i++)
+                        {
+                            gameObjects.Add(new Obsticle(z + i / 4f, 0));
+                            gameObjects.Add(new Obsticle(z + i / 4f, 1));
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
         public void CheckCollisions()
         {

@@ -53,11 +53,7 @@ namespace ArcadeRacing
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
-            {
-                mainGame.Render(GraphicsDevice, _spriteBatch);
-            }
-            _spriteBatch.End();
+            mainGame.Render(GraphicsDevice, _spriteBatch);
 
             base.Draw(gameTime);
         }

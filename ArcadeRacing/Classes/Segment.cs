@@ -18,7 +18,7 @@ namespace ArcadeRacing.Classes
         public static float segmentLength = 0.1f;
 
         static float roadWidth = 14;
-        static float boardroadWidth = 1;
+        static float boardroadWidth = 0.75f;
         public float curveture = 0f;
         public static float dy = 1f;
 
@@ -42,7 +42,7 @@ namespace ArcadeRacing.Classes
             this.z = z;
             for (int i = 0; i < 4; i++)
             {
-                vert[i].Color = Color.Black;
+                vert[i].Color = Color.Gray;
             }
 
             if ((int)(z*10)%2==0)
@@ -99,8 +99,6 @@ namespace ArcadeRacing.Classes
             //x2r = x2r.ConvertToMono_x();
             //y1 = y1.ConvertToMono_y();
             //y2 = y2.ConvertToMono_y();
-            y1 /= 1;
-            y2 /= 1;
 
             y1 -= 4.2f;
             y2 -= 4.2f;

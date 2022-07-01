@@ -10,16 +10,17 @@ namespace ArcadeRacing.Classes
 {
     abstract class GameObject
     {
-        protected float pos_x = 5, pos_z;
+        public static Random random = new Random();
         public virtual float GetX { get => pos_x; set => pos_x = value; }
         public virtual float GetZ { get => pos_z; set => pos_z = value; }
 
+        protected float pos_x, pos_z;
         public static Texture2D debug_texture;
         private static float cameraHeight;
         private static float cameraToSreen;
         protected Texture2D texture;
-        protected float objectWidth = 8;
-        protected float objectHeight = 10 * 2;
+        protected float objectWidth = 1;
+        protected float objectHeight = 1;
         protected Rectangle rectangle = new Rectangle(0, 0, 1, 1);
 
         public virtual bool IsIntersecting(Car car)
@@ -38,14 +39,14 @@ namespace ArcadeRacing.Classes
             debug_texture = new Texture2D(device, 1,1);
             debug_texture.SetData(new Color[1] { Color.Red });
         }
-        public virtual void Render(float player_pos_x, float player_pos_z, float prevCurves, SpriteBatch spriteBatch)
+        public virtual void Render(float player_pos_x, float player_pos_z, float prevCurves, SpriteBatch spriteBatch, Stack<(Texture2D, Rectangle)> renderStack)
         {
             float dz = (GetZ - player_pos_z);
             float y1 = cameraHeight - cameraHeight * cameraToSreen / dz;
             float y2 = cameraHeight - (cameraHeight- objectHeight) * cameraToSreen / dz;
 
             float wr = GetX + (objectWidth / 2) - player_pos_x;
-            float wl = GetX -(objectWidth / 2) - player_pos_x;
+            float wl = GetX - (objectWidth / 2) - player_pos_x;
 
             float x1l = prevCurves + wl * cameraToSreen / dz;
             float x1r = prevCurves + wr * cameraToSreen / dz;
@@ -58,7 +59,7 @@ namespace ArcadeRacing.Classes
             rectangle.Y = (int)(y2).ConvertToMono_y();
             rectangle.Height = (int)(y1).ConvertToMono_y() - (int)(y2).ConvertToMono_y();
 
-            spriteBatch.Draw(texture, rectangle, Color.White);
+            renderStack.Push((texture, rectangle));
         }
     }
 }
