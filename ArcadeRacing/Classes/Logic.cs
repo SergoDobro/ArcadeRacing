@@ -84,10 +84,10 @@ namespace ArcadeRacing.Classes
                     if (Math.Abs(segments[0].curveture)<0.3f)
                     {
                         //int pos = random.Next(0, 2);
-                        for (int i = 0; i < 20; i++)
+                        for (int i = 0; i < 50; i++)
                         {
-                            gameObjects.Add(new Obsticle(z + i / 4f, 0));
-                            gameObjects.Add(new Obsticle(z + i / 4f, 1));
+                            gameObjects.Add(new Obsticle(z + i / 8f, 0));
+                            gameObjects.Add(new Obsticle(z + i / 8f, 1));
                         }
                     }
                     break;

@@ -16,7 +16,7 @@ namespace ArcadeRacing.Classes.GameObjects
         public Obsticle(float z, int pos = 0)
         {
             GetZ = z;
-            GetX = (pos - 0.5f) * 2 * (objectWidth+4);
+            GetX =  (pos - 0.5f) * 2 * (objectWidth+8);
             objectWidth = 1;
             objectHeight = 2;
             texture = obsticles[random.Next(0, obsticles.Count)];

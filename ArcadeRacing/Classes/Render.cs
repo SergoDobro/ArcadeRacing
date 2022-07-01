@@ -82,7 +82,10 @@ namespace ArcadeRacing.Classes
 
             for (int i = 0; i < renderDistance && i < segments.Count; i++)
             {
-                if (segments[i].z - player.GetZ > Segment.segmentLength * (SegentDistructorMult-3))
+                //curviture += segments[ind].curveture *
+                //            (GlobalRenderSettings.cameraHeight -
+                //            GlobalRenderSettings.cameraHeight * GlobalRenderSettings.cameraToSreen / (segments[ind].z - player.GetZ + Segment.segmentLength)); 
+                if (segments[i].z - player.GetZ > Segment.segmentLength * (SegentDistructorMult+1))
                 {
                     ind = i;
                     float inter = (((player.GetZ * 10) % 10)/10f);
@@ -94,15 +97,18 @@ namespace ArcadeRacing.Classes
             objectRenderStack.Clear();
             foreach (var gameObject in gameObjects)
             {
-                if (gameObject.GetZ - player.GetZ > 0 && gameObject.GetZ - player.GetZ<segments.Count * Segment.segmentLength-5)
+                if (gameObject.GetZ - player.GetZ > 0 && gameObject.GetZ - player.GetZ<segments.Count * Segment.segmentLength)
                 {
-                    while (gameObject.GetZ> cz)
+                    while (gameObject.GetZ > cz)
                     {
                         cz = segments[ind].z;
-                        curviture += segments[ind].curveture;
+                        curviture += segments[ind].curveture
+                            *
+                            (GlobalRenderSettings.cameraHeight - 
+                            GlobalRenderSettings.cameraHeight * GlobalRenderSettings.cameraToSreen / (segments[ind].z - player.GetZ + Segment.segmentLength));
                         ind++;
                     }
-                    gameObject.Render(player.GetX, player.GetZ, curviture, spriteBatch, objectRenderStack);
+                    gameObject.Render(player.GetX * 5, player.GetZ, curviture, spriteBatch, objectRenderStack);
                 }
             }
             foreach (var obj in objectRenderStack)
@@ -139,11 +145,12 @@ namespace ArcadeRacing.Classes
     {
         static int width = 800;
         static int height = 480;
-        const float sizeX = 2.3f;
-        const float sizeY = 4.1f;
+
+        const float sizeX = 6.9f;
+        static float sizeY = sizeX / ((float)width / height);
         public static float ConvertToMono_x(this float x)
         {
-            return ((x+ sizeX) /(2* sizeX)) * width;
+            return (width / 2) + (x / sizeX) * (width / 2);//((x+sizeX) / (2 * sizeX)) * width; // + 0.5f * width;
         }
         public static float ConvertToMono_y(this float y)
         {

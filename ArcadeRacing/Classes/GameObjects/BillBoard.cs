@@ -16,7 +16,7 @@ namespace ArcadeRacing.Classes.GameObjects
         }
         public BillBoard(float z)
         {
-            objectWidth = 8;
+            objectWidth = 16;
             objectHeight = 16;
             GetZ = z;
             GetX = (random.Next(0, 2) - 0.5f) * 2 *( objectWidth +2 );

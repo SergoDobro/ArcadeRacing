@@ -36,14 +36,14 @@ namespace ArcadeRacing.Classes
         {
             cameraHeight = GlobalRenderSettings.cameraHeight;
             cameraToSreen = GlobalRenderSettings.cameraToSreen;
-            debug_texture = new Texture2D(device, 1,1);
+            debug_texture = new Texture2D(device, 1, 1);
             debug_texture.SetData(new Color[1] { Color.Red });
         }
         public virtual void Render(float player_pos_x, float player_pos_z, float prevCurves, SpriteBatch spriteBatch, Stack<(Texture2D, Rectangle)> renderStack)
         {
             float dz = (GetZ - player_pos_z);
             float y1 = cameraHeight - cameraHeight * cameraToSreen / dz;
-            float y2 = cameraHeight - (cameraHeight- objectHeight) * cameraToSreen / dz;
+            float y2 = cameraHeight - (cameraHeight - objectHeight) * cameraToSreen / dz;
 
             float wr = GetX + (objectWidth / 2) - player_pos_x;
             float wl = GetX - (objectWidth / 2) - player_pos_x;
@@ -51,11 +51,13 @@ namespace ArcadeRacing.Classes
             float x1l = prevCurves + wl * cameraToSreen / dz;
             float x1r = prevCurves + wr * cameraToSreen / dz;
 
-            y1 -= 4.2f;
-            y2 -= 4.2f;
+            y1 -= 4.14f;
+            y2 -= 4.14f;
 
             rectangle.X = (int)(x1l).ConvertToMono_x();
-            rectangle.Width = (int)(x1r).ConvertToMono_x() - (int)(x1l).ConvertToMono_x();
+            rectangle.Width = (int)(x1r.ConvertToMono_x() - x1l.ConvertToMono_x());
+            //System.Diagnostics.Debug.WriteLine(((int)(x1r).ConvertToMono_x() + (int)(x1l).ConvertToMono_x()).ToString() + " | "+           
+            //    ((x1l + x1r).ConvertToMono_x().ToString()));
             rectangle.Y = (int)(y2).ConvertToMono_y();
             rectangle.Height = (int)(y1).ConvertToMono_y() - (int)(y2).ConvertToMono_y();
 

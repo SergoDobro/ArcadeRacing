@@ -68,7 +68,7 @@ namespace ArcadeRacing.Classes
             float y1 = cameraHeight - cameraHeight * cameraToSreen / dz;
             float y2 = cameraHeight - cameraHeight * cameraToSreen / (dz + segmentLength);
 
-            float wr = (roadWidth / 2)                  - player_pos_x;
+            float wr =   (roadWidth / 2)                - player_pos_x;
             float wl = - (roadWidth / 2)                - player_pos_x;
 
             float crv = curveture * y2;
@@ -80,11 +80,11 @@ namespace ArcadeRacing.Classes
             float x2l = prevCurves + crv + wl * cameraToSreen / (dz + segmentLength);
             float x2r = prevCurves + crv + wr * cameraToSreen / (dz + segmentLength);
 
-            float x1l2 = prevCurves + (-boardroadWidth - (roadWidth / 2) - player_pos_x) * cameraToSreen / dz;
+            float x1l2 = prevCurves +       (-boardroadWidth - (roadWidth / 2) - player_pos_x) * cameraToSreen / dz;
             float x2l2 = prevCurves + crv + (-boardroadWidth - (roadWidth / 2) - player_pos_x) * cameraToSreen / (dz + segmentLength);
 
 
-            float x1r2 = prevCurves + (boardroadWidth + (roadWidth / 2) - player_pos_x) * cameraToSreen / dz;
+            float x1r2 = prevCurves +       (boardroadWidth + (roadWidth / 2) - player_pos_x) * cameraToSreen / dz;
             float x2r2 = prevCurves + crv + (boardroadWidth + (roadWidth / 2) - player_pos_x) * cameraToSreen / (dz + segmentLength);
 
             //x1l += player_pos_x;
@@ -100,8 +100,8 @@ namespace ArcadeRacing.Classes
             //y1 = y1.ConvertToMono_y();
             //y2 = y2.ConvertToMono_y();
 
-            y1 -= 4.2f;
-            y2 -= 4.2f;
+            y1 -= 4.14f;
+            y2 -= 4.14f;
 
             //center road
             vert[0].Position = new Vector3(x1l, y1, 0);
@@ -120,6 +120,12 @@ namespace ArcadeRacing.Classes
             vert[9].Position = new Vector3(x2r, y2, 0);
             vert[10].Position = new Vector3(x2r2, y2, 0);
             vert[11].Position = new Vector3(x1r2, y1, 0);
+            //float topX = 6.9f;
+            //float topY = topX / (800/480f);
+            //vert[8].Position = new Vector3(topX-1, topY-1, 0);
+            //vert[9].Position = new Vector3(topX-1, topY, 0);
+            //vert[10].Position = new Vector3(topX, topY, 0);
+            //vert[11].Position = new Vector3(topX, topY-1, 0);
 
             foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
             {
