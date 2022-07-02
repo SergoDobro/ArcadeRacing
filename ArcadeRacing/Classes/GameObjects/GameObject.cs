@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ArcadeRacing.Classes.Cars;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,6 @@ namespace ArcadeRacing.Classes
         public static Random random = new Random();
         public virtual float GetX { get => pos_x; set => pos_x = value; }
         public virtual float GetZ { get => pos_z; set => pos_z = value; }
-
         protected float pos_x, pos_z;
         public static Texture2D debug_texture;
         private static float cameraHeight;
@@ -25,12 +26,32 @@ namespace ArcadeRacing.Classes
 
         public virtual bool IsIntersecting(Car car)
         {
-            return Math.Abs(car.GetX - pos_x) < 2 && Math.Abs(car.GetZ - pos_z) < 2;
+            var res = false;// (car.GetZ - pos_z) < 1 || (car.GetZ - pos_z) < 1;
+            if (pos_z > car.GetZ + 0.45f)
+                res = (pos_z - car.GetZ) < 1f;
+
+            if (res)
+            {
+
+            }
+            if (Math.Abs(car.GetX - GetX/8)<(car.objectWidth+objectWidth)*0.05f)
+            {
+                res = res && true;
+            }
+            else
+            {
+                res = res && false;
+            }
+            if (res)
+            {
+                System.Diagnostics.Debug.WriteLine(res);
+            }
+            return res;
         }
         public virtual Texture2D GetTexture { get => texture; set => texture = value; }
-        public virtual void LoadTexture(Texture2D texture)
+        public virtual void LoadContent(ContentManager content)
         {
-            this.texture = texture;
+            texture = null;
         }
         public static void LoadRendering(GraphicsDevice device)
         {
@@ -39,7 +60,7 @@ namespace ArcadeRacing.Classes
             debug_texture = new Texture2D(device, 1, 1);
             debug_texture.SetData(new Color[1] { Color.Red });
         }
-        public virtual void Render(float player_pos_x, float player_pos_z, float prevCurves, SpriteBatch spriteBatch, Stack<(Texture2D, Rectangle)> renderStack)
+        public virtual (Texture2D, Rectangle, Rectangle) Render(float player_pos_x, float player_pos_z, float prevCurves)
         {
             float dz = (GetZ - player_pos_z);
             float y1 = cameraHeight - cameraHeight * cameraToSreen / dz;
@@ -56,12 +77,10 @@ namespace ArcadeRacing.Classes
 
             rectangle.X = (int)(x1l).ConvertToMono_x();
             rectangle.Width = (int)(x1r.ConvertToMono_x() - x1l.ConvertToMono_x());
-            //System.Diagnostics.Debug.WriteLine(((int)(x1r).ConvertToMono_x() + (int)(x1l).ConvertToMono_x()).ToString() + " | "+           
-            //    ((x1l + x1r).ConvertToMono_x().ToString()));
             rectangle.Y = (int)(y2).ConvertToMono_y();
             rectangle.Height = (int)(y1).ConvertToMono_y() - (int)(y2).ConvertToMono_y();
 
-            renderStack.Push((texture, rectangle));
+            return ((texture, rectangle, Rectangle.Empty));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ArcadeRacing.Classes.GameObjects;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,9 @@ namespace ArcadeRacing.Classes
         public const int SegentDistructorMult = 4;
         public GraphicsDevice graphicsDevice;
         private Background background;
-        public void LoadContent(GraphicsDevice graphicsDevice, Microsoft.Xna.Framework.Content.ContentManager content)
+        public void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
         {
+            this.graphicsDevice = graphicsDevice;
             BillBoard.LoadTexture(content);
             Obsticle.LoadTexture(content);
 
@@ -24,12 +26,24 @@ namespace ArcadeRacing.Classes
             GameObject.LoadRendering(graphicsDevice);
             background = new Background();
             background.LoadContent(content, graphicsDevice);
-
+            player.LoadContent(content);
+            for (int i = 0; i < renderDistance; i++)
+            {
+                AddSegment();
+            }
             int _z = 0;
             for (int i = 0; i < 100; i++)
             {
                 _z += random.Next(10,14);
                 AddGameOblect(_z);
+            }
+
+            foreach (var go in gameObjects)
+            {
+                if (go.GetTexture==null)
+                {
+                    go.LoadContent(content);
+                }
             }
         }
         public void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
@@ -40,9 +54,9 @@ namespace ArcadeRacing.Classes
             RenderSegments(graphicsDevice);
             spriteBatch.Begin();
             RenderObjects(spriteBatch);
+            RenderPlayer(spriteBatch);
             spriteBatch.End();
         }
-
         private void RenderSegments(GraphicsDevice graphicsDevice)
         {
             float curviture = 0;
@@ -58,22 +72,12 @@ namespace ArcadeRacing.Classes
                 }
             }
         }
-        private void RenderPlayer()
+        private void RenderPlayer(SpriteBatch spriteBatch)
         {
-            player.RenderPlayer();
+            var data = player.Render(0, player.GetZ-0.55f, 0);
+            spriteBatch.Draw(data.Item1, data.Item2, data.Item3, Color.White);
         }
-        private void RenderEnemyCars()
-        {
-            var carsOrdered = cars.OrderBy(x=>x.GetZ);
-            foreach (var car in carsOrdered)
-            {
-                if (car.GetZ - player.GetZ > 1)
-                {
-                    car.Render(player.GetX, player.GetZ);
-                }
-            }
-        }
-        Stack<(Texture2D, Rectangle)> objectRenderStack = new Stack<(Texture2D, Rectangle)>();
+        Stack<(Texture2D, Rectangle, Rectangle)> objectRenderStack = new Stack<(Texture2D, Rectangle, Rectangle)>();
         private void RenderObjects(SpriteBatch spriteBatch)
         {
             float cz = 0;
@@ -95,11 +99,19 @@ namespace ArcadeRacing.Classes
                 }
             }
             objectRenderStack.Clear();
+            gameObjects.Sort(new Comparison<GameObject>((a, b) =>
+            {
+
+                if (a.GetZ - b.GetZ > 0)
+                    return 1;
+                else
+                    return -1;
+            }));
             foreach (var gameObject in gameObjects)
             {
-                if (gameObject.GetZ - player.GetZ > 0 && gameObject.GetZ - player.GetZ<segments.Count * Segment.segmentLength)
+                if (gameObject.GetZ - player.GetZ > 0 && gameObject.GetZ - player.GetZ<segments.Count * Segment.segmentLength && ind < segments.Count)
                 {
-                    while (gameObject.GetZ > cz)
+                    while (gameObject.GetZ > cz && ind < segments.Count)
                     {
                         cz = segments[ind].z;
                         curviture += segments[ind].curveture
@@ -108,12 +120,15 @@ namespace ArcadeRacing.Classes
                             GlobalRenderSettings.cameraHeight * GlobalRenderSettings.cameraToSreen / (segments[ind].z - player.GetZ + Segment.segmentLength));
                         ind++;
                     }
-                    gameObject.Render(player.GetX * 5, player.GetZ, curviture, spriteBatch, objectRenderStack);
+                    objectRenderStack.Push(gameObject.Render(player.GetX * 5, player.GetZ, curviture));
                 }
             }
             foreach (var obj in objectRenderStack)
             {
-                spriteBatch.Draw(obj.Item1, obj.Item2, Color.White);
+                if (obj.Item3==Rectangle.Empty)
+                    spriteBatch.Draw(obj.Item1, obj.Item2, Color.White);
+                else
+                    spriteBatch.Draw(obj.Item1, obj.Item2, obj.Item3, Color.White);
             }
         }
         private void RenderBackground(SpriteBatch spriteBatch)

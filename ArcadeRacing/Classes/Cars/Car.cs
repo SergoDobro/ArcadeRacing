@@ -1,17 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArcadeRacing.Classes
+namespace ArcadeRacing.Classes.Cars
 {
     enum CarStateForward { Accelerate, Decelerate, None }
     enum CarStateSides { MoveRight, MoveLeft, None }
-    class Car
+    partial class Car : GameObject
     {
-        protected const float maxSpeed = 9;
+        protected const float maxSpeed = 7;
         protected float accel = maxSpeed / 5;
         protected float breaking = -maxSpeed;
         protected float decel = -maxSpeed / 5;
@@ -21,30 +22,26 @@ namespace ArcadeRacing.Classes
 
         protected float cenrtryFugal = 46f;
         protected float movecoef = 4f;
-        protected float speed = 0f;
+        public float speed = 0f;
+        public SoundPlayer soundPlayer = new SoundPlayer("carRoar");
+        public SoundPlayer soundPlayer2 = new SoundPlayer("carRoar");
+
+        protected CarStateSides carStateSides_prev = CarStateSides.None;
         protected CarStateForward carStateForward = CarStateForward.None;
         protected CarStateSides carStateSides = CarStateSides.None;
-
-
-
-        protected float pos_x, pos_z;
-        public virtual float GetX { get => pos_x; set => pos_x = value; }
-        public virtual float GetZ { get => pos_z; set => pos_z = value; }
-
-        public bool IsIntersecting(Car car)
-        {
-            return Math.Abs(car.GetX - pos_x) < 2 && Math.Abs(car.GetZ - pos_z) < 2;
-        }
         public void Killed()
         {
 
         }
-        public void Render(float player_pos_x, float player_pos_z)
-        {
-
-        }
+        const float interpoleSound = 0.12f;
         public virtual void Update(float dt, float seg0curv)
         {
+            soundPlayer.Voulme = (speed / maxSpeed) / 2;
+            soundPlayer2.Voulme = (speed / maxSpeed) / 2;// (speed / maxSpeed);
+            soundPlayer.Pitch = (speed / maxSpeed) * 1f - 1;
+            soundPlayer2.Pitch = ((speed / maxSpeed) * 1.5f - 1)* interpoleSound+(1- interpoleSound)*soundPlayer2.Pitch;// (speed / maxSpeed);
+
+            UpdateDraw(dt);
             GetX += -dt * seg0curv * cenrtryFugal * (float)Math.Pow((speed / maxSpeed), 1.5);
             if (carStateForward == CarStateForward.Accelerate)
             {
@@ -67,8 +64,16 @@ namespace ArcadeRacing.Classes
             speed = Math.Clamp(speed, 0, maxSpeed);
             GetZ += dt * speed;
             GetX = Math.Clamp(GetX, -2, 2);
+            carStateSides_prev = carStateSides;
+
+            if (carStateSides!=CarStateSides.None)
+            {
+                soundPlayer2.Pitch = ((speed / maxSpeed) * 2 - 1)* interpoleSound + soundPlayer2.Pitch*(1- interpoleSound);
+            }
         }
+        public void FinishedTrack()
+        {
 
-
+        }
     }
 }

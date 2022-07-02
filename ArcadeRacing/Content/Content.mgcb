@@ -37,6 +37,24 @@
 /processorParam:TextureFormat=Color
 /build:banner.png
 
+#begin carRoar.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:carRoar.wav
+
+#begin Finish.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Finish.png
+
 #begin obsticle_texture.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -60,4 +78,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:photo_2022-06-30_18-41-24.jpg;pts.jpg
+
+#begin spritesdone.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:spritesdone.png;CarSprites.png
 

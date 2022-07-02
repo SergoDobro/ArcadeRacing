@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using ArcadeRacing.Classes.Cars;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace ArcadeRacing.Classes.GameObjects
         {
             obsticles.Add(content.Load<Texture2D>("obsticle_texture"));
         }
+
+
         public Obsticle(float z, int pos = 0)
         {
             GetZ = z;

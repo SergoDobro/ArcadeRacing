@@ -1,4 +1,5 @@
-﻿using ArcadeRacing.Classes.GameObjects;
+﻿using ArcadeRacing.Classes.Cars;
+using ArcadeRacing.Classes.GameObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -21,17 +22,7 @@ namespace ArcadeRacing.Classes
         private float curvetureTotal = 0;
         private float k = 0;
         private int renderDistance = 500;
-        public void MainGaemClass()
-        {
-            Start();
-        }
-        public void Start()
-        {
-            for (int i = 0; i < renderDistance; i++)
-            {
-                AddSegment();
-            }
-        }
+        
         public void Update(GameTime gameTime)
         {
             //System.Diagnostics.Debug.WriteLine(player.GetZ);
@@ -73,23 +64,25 @@ namespace ArcadeRacing.Classes
         }
         public void AddGameOblect(int z)
         {
-            GameObject gameObject;
-            int ob = random.Next(0, 2);
+            int ob = random.Next(0, 3);
             switch (ob)
             {
                 case 0:
                     gameObjects.Add(new BillBoard(z));
                     break;
                 case 1:
-                    if (Math.Abs(segments[0].curveture)<0.3f)
+                    if (Math.Abs(segments[0].curveture)<0.1f)
                     {
                         //int pos = random.Next(0, 2);
-                        for (int i = 0; i < 50; i++)
+                        for (int i = 0; i < 1; i++)
                         {
                             gameObjects.Add(new Obsticle(z + i / 8f, 0));
                             gameObjects.Add(new Obsticle(z + i / 8f, 1));
                         }
                     }
+                    break;
+                case 2:
+                    gameObjects.Add(new FinishLine(z));
                     break;
                 default:
                     break;
@@ -140,6 +133,7 @@ namespace ArcadeRacing.Classes
                 if (gameObjects[i].IsIntersecting(player))
                 {
                     player.Killed();
+                    System.Diagnostics.Debug.WriteLine(gameObjects[i].GetX + " " + gameObjects[i].GetZ+" "+player.GetX+" "+player.GetZ);
                 }
             }
         }

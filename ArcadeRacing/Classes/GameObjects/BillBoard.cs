@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using ArcadeRacing.Classes.Cars;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace ArcadeRacing.Classes.GameObjects
             BillBords.Add(content.Load<Texture2D>("banner"));
             BillBords.Add(content.Load<Texture2D>("pts"));
         }
+
+
         public BillBoard(float z)
         {
             objectWidth = 16;

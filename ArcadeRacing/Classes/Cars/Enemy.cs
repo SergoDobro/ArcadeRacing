@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArcadeRacing.Classes
+namespace ArcadeRacing.Classes.Cars
 {
     class Enemy : Car
     {

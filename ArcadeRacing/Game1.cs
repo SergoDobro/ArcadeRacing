@@ -10,7 +10,7 @@ namespace ArcadeRacing
                 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        MainGameClass mainGame;
+        ProgramManager _programManager;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -20,7 +20,7 @@ namespace ArcadeRacing
             //_graphics.PreferredBackBufferWidth = 800;
             //_graphics.PreferredBackBufferHeight = 480;
 
-            mainGame = new MainGameClass();
+            _programManager = new ProgramManager();
         }
 
         protected override void Initialize()
@@ -34,9 +34,7 @@ namespace ArcadeRacing
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            mainGame.graphicsDevice = GraphicsDevice;
-            mainGame.Start();
-            mainGame.LoadContent(GraphicsDevice, Content);
+            _programManager.LoadContent(GraphicsDevice, Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -44,7 +42,7 @@ namespace ArcadeRacing
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            mainGame.Update(gameTime);
+            _programManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -53,7 +51,7 @@ namespace ArcadeRacing
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            mainGame.Render(GraphicsDevice, _spriteBatch);
+            _programManager.Render(GraphicsDevice, _spriteBatch);
 
             base.Draw(gameTime);
         }

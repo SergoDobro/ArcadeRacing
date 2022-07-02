@@ -1,16 +1,25 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArcadeRacing.Classes
+namespace ArcadeRacing.Classes.Cars
 {
     class Player : Car
     {
+        public Player()
+        {
+            objectWidth = 5;
+            objectHeight = 2;
+        }
         public override void Update(float dt, float seg0curv)
         {
+            base.Update(dt, seg0curv);
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.W))
                 carStateForward = CarStateForward.Accelerate;
@@ -25,11 +34,6 @@ namespace ArcadeRacing.Classes
                 carStateSides = CarStateSides.MoveRight;
             else
                 carStateSides = CarStateSides.None;
-
-            base.Update(dt, seg0curv);
-        }
-        public void RenderPlayer()
-        {
 
         }
     }
