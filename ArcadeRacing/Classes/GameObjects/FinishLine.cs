@@ -23,8 +23,10 @@ namespace ArcadeRacing.Classes.GameObjects
         }
         public override bool IsIntersecting(Car car)
         {
-            car.FinishedTrack();
-            return base.IsIntersecting(car);
+            var res = base.IsIntersecting(car);
+            if (res)
+                car.FinishedTrack();
+            return res;
         }
     }
 }

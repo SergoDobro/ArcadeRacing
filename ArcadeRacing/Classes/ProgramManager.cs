@@ -8,23 +8,27 @@ using System.Text;
 namespace ArcadeRacing.Classes
 {
     enum ProgramState { Menu, InGame, Finish }
-    class ProgramManager
+    static class ProgramManager
     {
-        ProgramState programState = ProgramState.InGame; 
-        MainGameClass _mainGame;
-        public ProgramManager()
+        static ProgramState programState = ProgramState.Menu;
+        static MainGameClass _mainGame;
+        static MenuClass _menuClass;
+        static public void Init()
         {
             _mainGame = new MainGameClass();
+            _menuClass = new MenuClass();
         }
-        public void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
+        static public void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
         {
             _mainGame.LoadContent(graphicsDevice, content);
+            _menuClass.LoadContent(content);
         }
-        public void Update(GameTime gameTime)
+        static public void Update(GameTime gameTime)
         {
             switch (programState)
             {
                 case ProgramState.Menu:
+                    _menuClass.Update();
                     break;
                 case ProgramState.InGame:
                     _mainGame.Update(gameTime);
@@ -35,11 +39,12 @@ namespace ArcadeRacing.Classes
                     break;
             }
         }
-        public void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        static public void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
             switch (programState)
             {
                 case ProgramState.Menu:
+                    _menuClass.Render(spriteBatch);
                     break;
                 case ProgramState.InGame:
                     _mainGame.Render(graphicsDevice, spriteBatch);
@@ -49,6 +54,49 @@ namespace ArcadeRacing.Classes
                 default:
                     break;
             }
+        }
+
+        static public void MoveToState(ProgramState newProgramState)
+        {
+            switch (programState)
+            {
+                case ProgramState.Menu:
+                    switch (newProgramState)
+                    {
+                        case ProgramState.InGame:
+                            _mainGame.Start();
+                            programState = ProgramState.InGame;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+
+                case ProgramState.InGame:
+                    switch (newProgramState)
+                    {
+                        case ProgramState.Finish:
+                            programState = ProgramState.Finish;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+
+                case ProgramState.Finish:
+                    switch (newProgramState)
+                    {
+                        case ProgramState.Menu:
+                            programState = ProgramState.Menu;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
 }

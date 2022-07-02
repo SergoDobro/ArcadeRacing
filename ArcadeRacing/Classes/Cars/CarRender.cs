@@ -66,12 +66,16 @@ namespace ArcadeRacing.Classes.Cars
         {
             texture = content.Load<Texture2D>("CarSprites");
             soundPlayer.LoadContent(content);
-            soundPlayer.IsRepeating = true;
-            soundPlayer.Play();
             soundPlayer2.LoadContent(content);
+            soundPlayer.IsRepeating = true;
             soundPlayer2.IsRepeating = true;
+            soundPlayer.Voulme = 0;
+            soundPlayer2.Voulme = 0;
+
+            soundPlayer.Play();
             System.Threading.Thread.Sleep(100);
             soundPlayer2.Play();
+
         }
     }
 }

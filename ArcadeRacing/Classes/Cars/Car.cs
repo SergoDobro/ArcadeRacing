@@ -18,17 +18,20 @@ namespace ArcadeRacing.Classes.Cars
         protected float decel = -maxSpeed / 5;
         protected float offRoadDecel = -maxSpeed / 2;
         protected float offRoadLimit = maxSpeed / 4;
-
-
         protected float cenrtryFugal = 46f;
         protected float movecoef = 4f;
         public float speed = 0f;
+
         public SoundPlayer soundPlayer = new SoundPlayer("carRoar");
         public SoundPlayer soundPlayer2 = new SoundPlayer("carRoar");
 
         protected CarStateSides carStateSides_prev = CarStateSides.None;
         protected CarStateForward carStateForward = CarStateForward.None;
         protected CarStateSides carStateSides = CarStateSides.None;
+
+        public Car() : base()
+        {
+        }
         public void Killed()
         {
 
@@ -71,9 +74,24 @@ namespace ArcadeRacing.Classes.Cars
                 soundPlayer2.Pitch = ((speed / maxSpeed) * 2 - 1)* interpoleSound + soundPlayer2.Pitch*(1- interpoleSound);
             }
         }
-        public void FinishedTrack()
-        {
 
+        protected int secsAfterOff = 4;
+        public virtual void FinishedTrack()
+        {
+            new System.Threading.Thread(() => {
+
+                int a = 100;
+                for (int i = 0; i < a; i++)
+                {
+                    carStateForward = CarStateForward.None;
+                    carStateSides = CarStateSides.None;
+                    soundPlayer.Voulme -= (float)secsAfterOff / a;
+                    soundPlayer2.Voulme -= (float)secsAfterOff / a;
+                    System.Threading.Thread.Sleep(1000*secsAfterOff / a);
+                }
+                soundPlayer.Voulme = 0;
+                soundPlayer2.Voulme = 0;
+            }).Start();
         }
     }
 }

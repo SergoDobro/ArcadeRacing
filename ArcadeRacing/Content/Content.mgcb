@@ -55,6 +55,18 @@
 /processorParam:TextureFormat=Color
 /build:Finish.png
 
+#begin MainMenu.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MainMenu.png
+
 #begin obsticle_texture.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -78,6 +90,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:photo_2022-06-30_18-41-24.jpg;pts.jpg
+
+#begin PlayButton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayButton.png
 
 #begin spritesdone.png
 /importer:TextureImporter

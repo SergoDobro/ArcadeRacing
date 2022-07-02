@@ -36,5 +36,14 @@ namespace ArcadeRacing.Classes.Cars
                 carStateSides = CarStateSides.None;
 
         }
+
+        public override void FinishedTrack()
+        {
+            base.FinishedTrack();
+            new System.Threading.Thread(()=> {
+                System.Threading.Thread.Sleep(1000 * secsAfterOff+100);
+                ProgramManager.MoveToState(ProgramState.Finish);
+            }).Start();
+        }
     }
 }

@@ -22,7 +22,10 @@ namespace ArcadeRacing.Classes
         private float curvetureTotal = 0;
         private float k = 0;
         private int renderDistance = 500;
-        
+        public void Start()
+        {
+
+        }
         public void Update(GameTime gameTime)
         {
             //System.Diagnostics.Debug.WriteLine(player.GetZ);
