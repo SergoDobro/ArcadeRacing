@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace ArcadeRacing.Classes
 {
@@ -13,15 +14,18 @@ namespace ArcadeRacing.Classes
         static ProgramState programState = ProgramState.Menu;
         static MainGameClass _mainGame;
         static MenuClass _menuClass;
+        static FinishFrame _finishFrame;
         static public void Init()
         {
             _mainGame = new MainGameClass();
             _menuClass = new MenuClass();
+            _finishFrame = new FinishFrame(_mainGame);
         }
         static public void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
         {
             _mainGame.LoadContent(graphicsDevice, content);
             _menuClass.LoadContent(content);
+            _finishFrame.LoadContent(content);
         }
         static public void Update(GameTime gameTime)
         {
@@ -34,6 +38,7 @@ namespace ArcadeRacing.Classes
                     _mainGame.Update(gameTime);
                     break;
                 case ProgramState.Finish:
+                    _finishFrame.Update();
                     break;
                 default:
                     break;
@@ -50,6 +55,8 @@ namespace ArcadeRacing.Classes
                     _mainGame.Render(graphicsDevice, spriteBatch);
                     break;
                 case ProgramState.Finish:
+                    _mainGame.Render(graphicsDevice, spriteBatch);
+                    _finishFrame.Render(spriteBatch);
                     break;
                 default:
                     break;
@@ -88,6 +95,7 @@ namespace ArcadeRacing.Classes
                     {
                         case ProgramState.Menu:
                             programState = ProgramState.Menu;
+                            Thread.Sleep(500);
                             break;
                         default:
                             break;

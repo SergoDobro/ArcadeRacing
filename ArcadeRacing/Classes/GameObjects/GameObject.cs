@@ -22,31 +22,36 @@ namespace ArcadeRacing.Classes
         protected Texture2D texture;
         protected float objectWidth = 1;
         protected float objectHeight = 1;
+        public virtual float GetObjectWidth { get => objectWidth; }
+        public virtual float GetObjectWidthCollision { get => objectWidth+2; }
+        public virtual float GetObjectHeight { get => objectHeight; }
         protected Rectangle rectangle = new Rectangle(0, 0, 1, 1);
 
         public virtual bool IsIntersecting(Car car)
         {
-            var res = false;// (car.GetZ - pos_z) < 1 || (car.GetZ - pos_z) < 1;
-            if (pos_z > car.GetZ + 0.45f)
-                res = (pos_z - car.GetZ) < 1f;
+            if (this == car)
+                return false;
+            if (this is Car)
+                if ((this as Car).GetGlobalCarState != GlobalCarState.InGame)
+                    return false;
+            bool res = (GetZ - car.GetZ > -0.1f) && (GetZ - car.GetZ) < 0.1f;
 
+
+            res &= (Math.Abs(CalculateDist(car)) < CalculateHalfWidth(car));
             if (res)
             {
+                if (car is Player)
+                {
+                    var a = Math.Abs(CalculateDist(car));
+                    var b = CalculateHalfWidth(car);
+                }
+            }
 
-            }
-            if (Math.Abs(car.GetX - GetX/8)<(car.objectWidth+objectWidth)*0.05f)
-            {
-                res = res && true;
-            }
-            else
-            {
-                res = res && false;
-            }
-            if (res)
-            {
-                System.Diagnostics.Debug.WriteLine(res);
-            }
             return res;
+        }
+        public virtual void OnCollision(GameObject gameObject)
+        {
+
         }
         public virtual Texture2D GetTexture { get => texture; set => texture = value; }
         public virtual void LoadContent(ContentManager content)
@@ -62,7 +67,7 @@ namespace ArcadeRacing.Classes
         }
         public virtual (Texture2D, Rectangle, Rectangle) Render(float player_pos_x, float player_pos_z, float prevCurves)
         {
-            float dz = (GetZ - player_pos_z);
+            float dz = (pos_z - player_pos_z);
             float y1 = cameraHeight - cameraHeight * cameraToSreen / dz;
             float y2 = cameraHeight - (cameraHeight - objectHeight) * cameraToSreen / dz;
 
@@ -81,6 +86,19 @@ namespace ArcadeRacing.Classes
             rectangle.Height = (int)(y1).ConvertToMono_y() - (int)(y2).ConvertToMono_y();
 
             return ((texture, rectangle, Rectangle.Empty));
+        }
+
+        public virtual float CalculateDist(Car car) => car.GetX * GlobalRenderSettings.playerMLT - CalculateX();
+        public virtual float CalculateX()
+        {
+            if ((this is Car))
+                return GetX * GlobalRenderSettings.playerMLT;
+            return GetX;
+        }
+        public virtual float CalculateHalfWidth(Car car)
+        {
+            return (car.GetObjectWidthCollision + GetObjectWidthCollision) / 2f; /// 2f * 0.1f;}
+
         }
     }
 }

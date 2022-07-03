@@ -12,14 +12,12 @@ namespace ArcadeRacing.Classes.Cars
 {
     class Player : Car
     {
-        public Player()
+        public static float CameraZ;
+        public override float GetZ { get => base.GetZ; set => base.GetZ = value; }
+        public override void ControlsLogic(float dt, float seg0curv)
         {
-            objectWidth = 5;
-            objectHeight = 2;
-        }
-        public override void Update(float dt, float seg0curv)
-        {
-            base.Update(dt, seg0curv);
+            CameraZ = pos_z - 0.7f;
+            System.Diagnostics.Debug.WriteLine(pos_x + " " + pos_z);
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.W))
                 carStateForward = CarStateForward.Accelerate;

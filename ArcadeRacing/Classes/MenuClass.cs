@@ -27,19 +27,20 @@ namespace ArcadeRacing.Classes
             {
                 menuStates = MenuStates.animation;
                 new Thread(()=> {
-                    Thread.Sleep(2000);
+                    Thread.Sleep(500);
                     menuStates = MenuStates.moving;
                 }).Start();
             }
             if (menuStates == MenuStates.moving)
             {
                 ProgramManager.MoveToState(ProgramState.InGame);
+                menuStates = MenuStates.none;
             }
         }
         float t = 0;
         public void Render(SpriteBatch spriteBatch)
         {
-            t += 1;
+            t += 0.75f;
             spriteBatch.Begin();
             spriteBatch.Draw(backGround_texture, new Vector2(0,0), Color.White);
             if (menuStates == MenuStates.animation)

@@ -21,8 +21,8 @@ namespace ArcadeRacing.Classes.GameObjects
         {
             objectWidth = 16;
             objectHeight = 16;
-            GetZ = z;
-            GetX = (random.Next(0, 2) - 0.5f) * 2 *( objectWidth +2 );
+            pos_z = z;
+            pos_x= (random.Next(0, 2) - 0.5f) * 2 *( objectWidth +2 );
             texture = BillBords[random.Next(0, BillBords.Count)];
         }
     }

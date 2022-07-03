@@ -16,17 +16,17 @@ namespace ArcadeRacing.Classes.GameObjects
 
         public FinishLine(float z, int pos = 0)
         {
-            GetZ = z;
-            GetX = 0;
+            pos_z = z;
+            pos_x = 0;
             objectWidth = 30; //10 = road
             objectHeight = 10;
         }
-        public override bool IsIntersecting(Car car)
-        {
-            var res = base.IsIntersecting(car);
-            if (res)
-                car.FinishedTrack();
-            return res;
-        }
+        //public override bool IsIntersecting(Car car)
+        //{
+        //    var res = base.IsIntersecting(car);
+        //    if (res)
+        //        car.FinishedTrack();
+        //    return res;
+        //}
     }
 }
