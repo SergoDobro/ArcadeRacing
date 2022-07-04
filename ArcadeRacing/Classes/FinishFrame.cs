@@ -24,7 +24,7 @@ namespace ArcadeRacing.Classes
         public void Update()
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            if (keyboardState.IsKeyDown(Keys.Enter))
+            if (InputManager.GetEnter())
             {
                 ProgramManager.MoveToState(ProgramState.Menu);
             }

@@ -7,16 +7,24 @@ using System.Threading.Tasks;
 namespace ArcadeRacing.Classes.Cars
 {
     class Enemy : Car
-    { 
+    {
         float whereToGo = 0;
+        float whereToGoLine = -0.5f;
 
         float riskiness = (float)(random.NextDouble() - 1)/2f;
+        int aiTimer= 0;
         public override void ControlsLogic(float dt, float seg0curv)
         {
-            
-            if (GetX < whereToGo - 0.2f)
+            aiTimer += 1;
+            if (aiTimer%30 == 0)
+            {
+                whereToGo = (float)(random.NextDouble() - 1);
+                whereToGoLine = (random.Next(0, 2) - 0.5f)*2*0.4f;
+            }
+
+            if (GetX < whereToGo - 0.2f + whereToGoLine)
                 carStateSides = CarStateSides.MoveRight;
-            else if (GetX > whereToGo + 0.2f)
+            else if (GetX > whereToGo + 0.2f + whereToGoLine)
                 carStateSides = CarStateSides.MoveLeft;
             else
                 carStateSides = CarStateSides.None;
@@ -26,8 +34,6 @@ namespace ArcadeRacing.Classes.Cars
                 carStateForward = CarStateForward.None;
             else 
                 carStateForward = CarStateForward.Accelerate;
-            if (Math.Abs(seg0curv) > 0.1f)
-                whereToGo = (float)(random.NextDouble() - 1);
         }
     }
 }

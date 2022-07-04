@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace ArcadeRacing.Classes.Cars
 {
@@ -18,7 +19,6 @@ namespace ArcadeRacing.Classes.Cars
         protected private int currentFrame = 0;
         public void UpdateDraw(float dt)
         {
-
             timer += dt;
             if (globalCarState == GlobalCarState.InGame )
             {
@@ -55,7 +55,11 @@ namespace ArcadeRacing.Classes.Cars
             }
             else if (globalCarState == GlobalCarState.Death)
             {
-                if (timer > 0.17f)
+                if (this is Car)
+                {
+                    Microsoft.Xna.Framework.Input.GamePad.SetVibration(0, 1, 1);
+                }
+                if (timer > 0.2f)
                 {
                     currentFrameDeath++;
                     timer = 0;
@@ -65,8 +69,9 @@ namespace ArcadeRacing.Classes.Cars
                     currentFrameDeath = 4;
                     globalCarState = GlobalCarState.Dead;
                     FinishedTrack();
+                    Microsoft.Xna.Framework.Input.GamePad.SetVibration(0, 0, 0);
                 }
-                sourceRectangle = new Rectangle(1 * 62, 0, 62, 32);
+                sourceRectangle = new Rectangle(currentFrameDeath * 62, 0, 62, 32);
             }
             else
             {
@@ -76,9 +81,17 @@ namespace ArcadeRacing.Classes.Cars
         }
         int currentFrameDeath = 0;
         Texture2D explosionTexture;
-        public override (Texture2D, Rectangle, Rectangle) Render(float player_pos_x, float player_pos_z, float prevCurves)
+        public override (Texture2D, Rectangle, Rectangle) Render(float player_pos_x, float player_pos_z, float prevCurves, float myX = 0)
         {
-            var res = base.Render(player_pos_x, player_pos_z, prevCurves);
+            (Texture2D, Rectangle, Rectangle) res;
+            if (this is Player)
+            {
+                 res = base.Render(player_pos_x, player_pos_z, prevCurves, 0);
+            }
+            else
+            {
+                res = base.Render(player_pos_x, player_pos_z, prevCurves, GetX * GlobalRenderSettings.playerMLT);
+            }
             res.Item3 = sourceRectangle;
             if (globalCarState == GlobalCarState.Death)
             {
@@ -100,27 +113,26 @@ namespace ArcadeRacing.Classes.Cars
         public override void LoadContent(ContentManager content)
         {
             objectWidth = 2;
-            objectHeight = 2;
+            objectHeight = 1.5f;
             if (texture == null)
                 texture = content.Load<Texture2D>("CarSprites");
             if (explosionTexture == null)
                 explosionTexture = content.Load<Texture2D>("explosion");
 
-            if (soundPlayer == null)
-                soundPlayer.LoadContent(content);
-            if (soundPlayer2 == null)
-                soundPlayer2.LoadContent(content);
+            soundPlayer.LoadContent(content);
+            soundPlayer2.LoadContent(content);
             soundPlayer.IsRepeating = true;
             soundPlayer2.IsRepeating = true;
             soundPlayer.Voulme = 0;
             soundPlayer2.Voulme = 0;
             currentFrameDeath = 0;
 
-            new System.Threading.Thread(() => {
+            new Thread(()=>
+            {
                 soundPlayer.Play();
                 System.Threading.Thread.Sleep(100);
                 soundPlayer2.Play();
-            }); 
+            }).Start();
         }
 
     }

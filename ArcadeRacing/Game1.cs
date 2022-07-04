@@ -16,9 +16,10 @@ namespace ArcadeRacing
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            //_graphics.PreferredBackBufferWidth = 800;
-            //_graphics.PreferredBackBufferHeight = 480;
-
+            _graphics.PreferredBackBufferWidth = 1920;//800;
+            _graphics.PreferredBackBufferHeight = 1080;//480;
+            GlobalRenderSettings.windowHeight = _graphics.PreferredBackBufferHeight;
+            GlobalRenderSettings.windowWidth = _graphics.PreferredBackBufferWidth;
             ProgramManager.Init();
         }
 

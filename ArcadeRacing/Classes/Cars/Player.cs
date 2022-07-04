@@ -16,23 +16,37 @@ namespace ArcadeRacing.Classes.Cars
         public override float GetZ { get => base.GetZ; set => base.GetZ = value; }
         public override void ControlsLogic(float dt, float seg0curv)
         {
-            CameraZ = pos_z - 0.7f;
             System.Diagnostics.Debug.WriteLine(pos_x + " " + pos_z);
             KeyboardState keyboardState = Keyboard.GetState();
-            if (keyboardState.IsKeyDown(Keys.W))
+            GamePadState gamePadState = GamePad.GetState(0);
+            if (InputManager.GetInputY() > 0)
+            {
                 carStateForward = CarStateForward.Accelerate;
-            else if (keyboardState.IsKeyDown(Keys.S))
+            }
+            else if (InputManager.GetInputY() < 0)
                 carStateForward = CarStateForward.Decelerate;
             else
                 carStateForward = CarStateForward.None;
 
-            if (keyboardState.IsKeyDown(Keys.A))
+
+            if (InputManager.GetInputX() < 0)
+            {
+                inputParametr = - InputManager.GetInputX();
                 carStateSides = CarStateSides.MoveLeft;
-            else if (keyboardState.IsKeyDown(Keys.D))
+            }
+            else if (InputManager.GetInputX() > 0)
+            {
+                inputParametr = InputManager.GetInputX();
                 carStateSides = CarStateSides.MoveRight;
+            }
             else
                 carStateSides = CarStateSides.None;
 
+
+
+
+
+            GamePad.SetVibration(0, (speed / maxSpeed) / 2-0.1f, (speed / maxSpeed) / 2 - 0.1f);
         }
 
         public override void FinishedTrack()
@@ -42,6 +56,13 @@ namespace ArcadeRacing.Classes.Cars
                 System.Threading.Thread.Sleep(1000 * secsAfterOff+100);
                 ProgramManager.MoveToState(ProgramState.Finish);
             }).Start();
+        }
+
+        public override void UpdateSounds(float mainPlayerPosCastile)
+        {
+            base.UpdateSounds(mainPlayerPosCastile);
+            //soundPlayer.Voulme /= 2f;
+            //soundPlayer2.Voulme /= 2f;
         }
     }
 }

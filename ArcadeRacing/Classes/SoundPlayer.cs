@@ -44,7 +44,7 @@ namespace ArcadeRacing.Classes
             get
             {
                 if (_instance != default)
-                    return (int)_instance.Pitch;
+                    return _instance.Pitch;
 
 
                 return 0;

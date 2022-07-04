@@ -103,18 +103,6 @@
 /processorParam:TextureFormat=Color
 /build:obsticle_texture.png
 
-#begin photo_2022-06-30_18-41-24.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:photo_2022-06-30_18-41-24.jpg;pts.jpg
-
 #begin PlayButton.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -127,6 +115,30 @@
 /processorParam:TextureFormat=Color
 /build:PlayButton.png
 
+#begin pt.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:pt.png
+
+#begin pts.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:pts.png
+
 #begin spritesdone.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -138,4 +150,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:spritesdone.png;CarSprites.png
+
+#begin StartSound.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:StartSound.mp3
 

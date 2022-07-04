@@ -19,6 +19,7 @@ namespace ArcadeRacing.Classes
         private ContentManager content;
         public void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
         {
+            
             this.content = content;
             this.graphicsDevice = graphicsDevice;
             BillBoard.LoadTexture(content);
@@ -32,6 +33,7 @@ namespace ArcadeRacing.Classes
         }
         public void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
+            Player.CameraZ = player.GetZ - 0.6f;
             spriteBatch.Begin();
             RenderBackground(spriteBatch);
             spriteBatch.End();
@@ -60,7 +62,7 @@ namespace ArcadeRacing.Classes
         {
             if (player.GetGlobalCarState!= GlobalCarState.Dead)
             {
-                var data = player.Render(0, Player.CameraZ - 0* 0.55f, 0);
+                var data = player.Render(0, Player.CameraZ, 0);
                 spriteBatch.Draw(data.Item1, data.Item2, data.Item3, Color.White);
             }
         }
@@ -118,10 +120,6 @@ namespace ArcadeRacing.Classes
                         {
                             objectRenderStack.Push(gameObject.Render(player.GetX * GlobalRenderSettings.playerMLT, Player.CameraZ, curviture));
                         }
-                        else
-                        {
-
-                        }
                     }
                     else
                         objectRenderStack.Push(gameObject.Render(player.GetX * GlobalRenderSettings.playerMLT, Player.CameraZ, curviture));
@@ -138,45 +136,6 @@ namespace ArcadeRacing.Classes
         private void RenderBackground(SpriteBatch spriteBatch)
         {
             background.Render(spriteBatch, curvetureTotal);
-        }
-    }
-    public class GlobalRenderSettings
-    {
-        public static float cameraHeight = 5;
-        public static float cameraToSreen = 0.5f;
-        public static BasicEffect basicEffect;
-        public static int windowWidth = 800;
-        public static int windowHeight = 480;
-        public static float playerMLT = 6f;
-        public static void LoadGlobalRenderSettings(GraphicsDevice device)
-        {
-            float asprat = 800f / 480f;
-            Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), asprat, 0.1f, 1000.0f);//(800, 480, -100, 100);
-            Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 10), Vector3.Zero, Vector3.Up);
-
-            basicEffect = new BasicEffect(device);
-            basicEffect.LightingEnabled = false;
-            basicEffect.TextureEnabled = false;
-            basicEffect.VertexColorEnabled = true;
-            basicEffect.Projection = projection;
-            basicEffect.View = view;
-            basicEffect.World = Matrix.Identity;
-        }
-    }
-    static class Extention
-    {
-        static int width = 800;
-        static int height = 480;
-
-        const float sizeX = 6.9f;
-        static float sizeY = sizeX / ((float)width / height);
-        public static float ConvertToMono_x(this float x)
-        {
-            return (width / 2) + (x / sizeX) * (width / 2);//((x+sizeX) / (2 * sizeX)) * width; // + 0.5f * width;
-        }
-        public static float ConvertToMono_y(this float y)
-        {
-            return ((sizeY - y) / (sizeY * 2)) * height;
         }
     }
 }

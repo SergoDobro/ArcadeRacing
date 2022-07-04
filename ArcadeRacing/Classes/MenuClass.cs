@@ -15,24 +15,30 @@ namespace ArcadeRacing.Classes
         Texture2D backGround_texture;
         Texture2D btn_texture;
         MenuStates menuStates = MenuStates.none;
+        SoundPlayer soundPlayer;
+        
         public void LoadContent(ContentManager content)
         {
             backGround_texture = content.Load<Texture2D>("MainMenu");
             btn_texture = content.Load<Texture2D>("PlayButton");
+            soundPlayer = new SoundPlayer("StartSound");
+            soundPlayer.LoadContent(content);
         }
         public void Update()
         {
             KeyboardState keyboardState = Keyboard.GetState(); 
-            if (keyboardState.IsKeyDown(Keys.Enter) && menuStates == MenuStates.none)
+            if (InputManager.GetEnter() && menuStates == MenuStates.none)
             {
-                menuStates = MenuStates.animation;
+                soundPlayer.Play();
+                   menuStates = MenuStates.animation;
                 new Thread(()=> {
-                    Thread.Sleep(500);
+                    Thread.Sleep(200);
                     menuStates = MenuStates.moving;
                 }).Start();
             }
             if (menuStates == MenuStates.moving)
             {
+
                 ProgramManager.MoveToState(ProgramState.InGame);
                 menuStates = MenuStates.none;
             }
@@ -42,15 +48,16 @@ namespace ArcadeRacing.Classes
         {
             t += 0.75f;
             spriteBatch.Begin();
-            spriteBatch.Draw(backGround_texture, new Vector2(0,0), Color.White);
+            spriteBatch.Draw(backGround_texture, new Rectangle(0,0, GlobalRenderSettings.windowWidth, GlobalRenderSettings.windowHeight), Color.White);
             if (menuStates == MenuStates.animation)
-                spriteBatch.Draw(btn_texture, new Vector2(backGround_texture.Width / 2 - btn_texture.Width / 2,
-                    backGround_texture.Height / 2 - btn_texture.Height / 2), new Color(
+                spriteBatch.Draw(btn_texture, new Vector2(GlobalRenderSettings.windowWidth / 2 - btn_texture.Width / 2,
+                    GlobalRenderSettings.windowHeight / 2 - btn_texture.Height / 2), new Color(
                         1,1, (float)Math.Sin(t)));
             else
-                spriteBatch.Draw(btn_texture, new Vector2(backGround_texture.Width / 2 - btn_texture.Width / 2,
-                    backGround_texture.Height / 2 - btn_texture.Height / 2), Color.White);
+                spriteBatch.Draw(btn_texture, new Vector2(GlobalRenderSettings.windowWidth / 2 - btn_texture.Width / 2,
+                    GlobalRenderSettings.windowHeight / 2 - btn_texture.Height / 2), Color.White);
             spriteBatch.End();
         }
+        
     }
 }

@@ -14,6 +14,7 @@ namespace ArcadeRacing.Classes.GameObjects
         {
             BillBords.Add(content.Load<Texture2D>("banner"));
             BillBords.Add(content.Load<Texture2D>("pts"));
+            BillBords.Add(content.Load<Texture2D>("pt"));
         }
 
 

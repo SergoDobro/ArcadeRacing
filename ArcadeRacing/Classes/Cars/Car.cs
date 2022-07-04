@@ -21,7 +21,7 @@ namespace ArcadeRacing.Classes.Cars
         protected float offRoadDecel = -maxSpeed / 2;
         protected float offRoadLimit = maxSpeed / 4;
         protected float cenrtryFugal = 60f;
-        protected float movecoef = 4f;
+        protected float movecoef = 3f;
         public float speed = 0f;
 
         public SoundPlayer soundPlayer = new SoundPlayer("carRoar");
@@ -32,12 +32,15 @@ namespace ArcadeRacing.Classes.Cars
         protected CarStateSides carStateSides = CarStateSides.None;
         protected GlobalCarState globalCarState = GlobalCarState.InGame;
         public GlobalCarState GetGlobalCarState { get => globalCarState; }
-        public override float GetObjectWidthCollision { get => objectWidth * 0.9f; }
+        public override float GetObjectWidthCollision { get => objectWidth * 0.8f; }
         public Car() => Reset();
         public void Reset()
         {
+            sourceRectangle = new Rectangle(0, 0, widthFrame, heightFrame);
             globalCarState = GlobalCarState.InGame;
             speed = 0;
+            currentFrame = 0;
+            currentFrameDeath = 0;
 
         }
         public void Killed()
@@ -48,14 +51,13 @@ namespace ArcadeRacing.Classes.Cars
             carStateForward = CarStateForward.None;
         }
         const float interpoleSound = 0.12f;
-        public virtual void Update(float dt, float seg0curv)
+        public virtual void Update(float dt, float seg0curv, float mainPlayerPosCastile)
         {
-            soundPlayer.Voulme = (speed / maxSpeed) / 2;
-            soundPlayer2.Voulme = (speed / maxSpeed) / 2;// (speed / maxSpeed);
-            soundPlayer.Pitch = (speed / maxSpeed) * 1f - 1;
-            soundPlayer2.Pitch = ((speed / maxSpeed) * 1.5f - 1) * interpoleSound + (1 - interpoleSound) * soundPlayer2.Pitch;// (speed / maxSpeed);
-
+            UpdateSounds(mainPlayerPosCastile);
             UpdateDraw(dt);
+            if (globalCarState == GlobalCarState.Dead)
+                return;
+
             GetX += -dt * seg0curv * cenrtryFugal * (float)Math.Pow((speed / maxSpeed), 1.5);
 
             if (globalCarState == GlobalCarState.InGame)
@@ -74,8 +76,8 @@ namespace ArcadeRacing.Classes.Cars
                 {
                     speed += dt * decel;
                 }
-                if (carStateSides == CarStateSides.MoveRight) GetX += dt * movecoef * speed / maxSpeed;
-                if (carStateSides == CarStateSides.MoveLeft) GetX -= dt * movecoef * speed / maxSpeed;
+                if (carStateSides == CarStateSides.MoveRight) GetX += dt * movecoef * inputParametr * speed / maxSpeed;
+                if (carStateSides == CarStateSides.MoveLeft) GetX -= dt * movecoef * inputParametr * speed / maxSpeed;
                 if (Math.Abs(GetX) > 1 && speed > offRoadLimit)
                     speed += dt * offRoadDecel;
             }
@@ -101,6 +103,7 @@ namespace ArcadeRacing.Classes.Cars
         }
 
         protected int secsAfterOff = 4;
+        protected float inputParametr = 1;
         public override void OnCollision(GameObject gameObject)
         {
             if (gameObject.GetType() == typeof(FinishLine))
@@ -113,9 +116,13 @@ namespace ArcadeRacing.Classes.Cars
                 float hd = gameObject.CalculateHalfWidth(this);
                 int sg = Math.Sign(dst);
                 float bnd = Math.Abs(
-                    sg * hd + gameObject.CalculateX()
+                    -sg * hd + gameObject.CalculateX()
                     );
                 GetX = Math.Clamp(GetX * GlobalRenderSettings.playerMLT, -bnd, bnd) / GlobalRenderSettings.playerMLT;
+                if (this is Player)
+                {
+
+                }
             }
             else if (gameObject.GetType() == typeof(Enemy))
             {
@@ -135,10 +142,20 @@ namespace ArcadeRacing.Classes.Cars
         }
         public virtual void FinishedTrack()
         {
+            soundPlayer.Stop();
+            soundPlayer2.Stop();
             if (globalCarState != GlobalCarState.Dead)
                 globalCarState = GlobalCarState.Finished;
             carStateSides = CarStateSides.None;
 
+        }
+
+        public virtual void UpdateSounds(float mainPlayerPosCastile)
+        {
+            soundPlayer.Voulme = (float)(1 - Math.Pow((Math.Abs(GetZ - mainPlayerPosCastile) / 20f), 2)) * (speed / maxSpeed) / 2f;
+            soundPlayer2.Voulme = soundPlayer.Voulme;// (speed / maxSpeed);
+            soundPlayer.Pitch = (speed / maxSpeed) * 1f - 1;
+            soundPlayer2.Pitch = ((speed / maxSpeed) * 1.5f - 1) * interpoleSound + (1 - interpoleSound) * soundPlayer2.Pitch;// (speed / maxSpeed);
         }
     }
 }

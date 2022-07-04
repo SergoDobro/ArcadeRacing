@@ -65,14 +65,16 @@ namespace ArcadeRacing.Classes
             debug_texture = new Texture2D(device, 1, 1);
             debug_texture.SetData(new Color[1] { Color.Red });
         }
-        public virtual (Texture2D, Rectangle, Rectangle) Render(float player_pos_x, float player_pos_z, float prevCurves)
+        public virtual (Texture2D, Rectangle, Rectangle) Render(float player_pos_x, float player_pos_z, float prevCurves, float myX = 0)
         {
+            if (myX == 0)
+                myX = GetX;
             float dz = (pos_z - player_pos_z);
             float y1 = cameraHeight - cameraHeight * cameraToSreen / dz;
             float y2 = cameraHeight - (cameraHeight - objectHeight) * cameraToSreen / dz;
 
-            float wr = GetX + (objectWidth / 2) - player_pos_x;
-            float wl = GetX - (objectWidth / 2) - player_pos_x;
+            float wr = myX + (objectWidth / 2) - player_pos_x;
+            float wl = myX - (objectWidth / 2) - player_pos_x;
 
             float x1l = prevCurves + wl * cameraToSreen / dz;
             float x1r = prevCurves + wr * cameraToSreen / dz;
@@ -88,7 +90,7 @@ namespace ArcadeRacing.Classes
             return ((texture, rectangle, Rectangle.Empty));
         }
 
-        public virtual float CalculateDist(Car car) => car.GetX * GlobalRenderSettings.playerMLT - CalculateX();
+        public virtual float CalculateDist(Car car) => CalculateX() - car.GetX * GlobalRenderSettings.playerMLT;
         public virtual float CalculateX()
         {
             if ((this is Car))

@@ -20,23 +20,26 @@ namespace ArcadeRacing.Classes
         private float prev;
         private float curvetureTotal = 0;
         private float k = 0;
+        private float totalK = 0;
         private int renderDistance = 500;
         public void Start()
         {
             curvetureTotal = 0;
+            totalK = k;
             k = -10;
             prev = 0;
             player.Reset();
             player.LoadContent(content);
             gameObjects?.Clear();
             segments?.Clear();
+            cars?.Clear();
             for (int i = 1; i < 8; i++)
             {
-                AddEnemy(0.5f, i);
-                AddEnemy(-0.5f, i);
+                AddEnemy(0.75f, i);
+                AddEnemy(-0.75f, i);
             }
-            AddEnemy(-0.5f, 0);
-            player.GetX = 0.5f;
+            AddEnemy(-0.75f, 0);
+            player.GetX = 0.75f;
             player.GetZ = 0;
             //gameObjects.Add(player);
 
@@ -45,7 +48,7 @@ namespace ArcadeRacing.Classes
                 AddSegment();
             }
             int _z = 0;
-            int finishZ = 100;
+            int finishZ = 200;
             for (int i = 0; i < 100 && _z < finishZ; i++)
             {
                 AddGameOblect(_z);
@@ -68,12 +71,16 @@ namespace ArcadeRacing.Classes
         }
         public void Update(GameTime gameTime)
         {
+
+            if (player.GetGlobalCarState == GlobalCarState.Dead
+                || player.GetGlobalCarState == GlobalCarState.Finished)
+                GamePad.SetVibration(0, 0, 0);
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             UpdateCars(dt, curvitureFromZ(Player.CameraZ));
-            CheckCarToCarCollisions();
+
             CheckCarToObjectCollision();
 
-            player.Update(dt, segments[0].curveture);
+            player.Update(dt, segments[0].curveture, player.GetZ);
 
             if (Player.CameraZ - prev >= Segment.segmentLength)
             {
@@ -98,9 +105,10 @@ namespace ArcadeRacing.Classes
                 curvitureFromZ(k)
                 ));
             k += Segment.segmentLength;
+            //totalK += Segment.segmentLength;
         }
         public float curvitureFromZ(float z) =>
-            0;// (float)(Math.Sin(z * 0.15f) * Math.Sin(z * 0.15f) * Math.Cos(z * 0.2f) * Math.Sin(z * 0.002f)) / 2;
+             (float)(Math.Sin((z + totalK) * 0.15f) * Math.Sin((z + totalK) * 0.15f) * Math.Cos((z + totalK) * 0.2f) * Math.Sin((z + totalK) * 0.002f)) / 5;
         public void RemoveSegment()
         {
             curvetureTotal += segments[0].curveture;
@@ -115,53 +123,16 @@ namespace ArcadeRacing.Classes
                     gameObjects.Add(new BillBoard(z));
                     break;
                 case 1:
-                    if (Math.Abs(segments[0].curveture) < 0.1f)
+                    //int pos = random.Next(0, 2);
+                    for (int i = 0; i < 30; i++)
                     {
-                        //int pos = random.Next(0, 2);
-                        for (int i = 0; i < 30; i++)
-                        {
-                            gameObjects.Add(new Obsticle(z + i / 8f, 0));
-                            gameObjects.Add(new Obsticle(z + i / 8f, 1));
-                        }
+                        gameObjects.Add(new Obsticle(z + i / 8f, 0));
+                        gameObjects.Add(new Obsticle(z + i / 8f, 1));
                     }
                     break;
                 default:
                     break;
             }
-        }
-        public void CheckCollisions()
-        {
-            CheckCarToCarCollisions();
-            CheckCarToObjectCollision();
-
-        }
-        public void CheckCarToCarCollisions()
-        {
-            for (int i = 0; i < cars.Count; i++)
-            {
-                for (int j = 0; j < cars.Count; j++)
-                {
-                    if (i != j)
-                    {
-                        if (cars[i].IsIntersecting(cars[j]))
-                        {
-                            //ColideCars(cars[i], cars[j]);
-                        }
-                    }
-                }
-            }
-
-            for (int j = 0; j < cars.Count; j++)
-            {
-                if (player.IsIntersecting(player))
-                {
-                }
-                if (player.IsIntersecting(cars[j]))
-                {
-                    //ColideCars(player, cars[j]);
-                }
-            }
-
         }
         public void CheckCarToObjectCollision()
         {
@@ -172,6 +143,10 @@ namespace ArcadeRacing.Classes
                     if (gameObjects[i].IsIntersecting(cars[j]))
                     {
                         cars[j].OnCollision(gameObjects[i]);
+                        if (gameObjects[i] is Car)
+                        {
+                            //gameObjects[i].OnCollision(gameObjects[j]);
+                        }
                     }
                 }
                 if (gameObjects[i].IsIntersecting(player))
@@ -181,19 +156,11 @@ namespace ArcadeRacing.Classes
                 }
             }
         }
-        public void ColideCars(Car car1, Car car2)
-        {
-            car1.OnCollision(car2);
-            car2.OnCollision(car1);
-        }
         public void UpdateCars(float dt, float seg0curv)
         {
             foreach (var car in cars)
             {
-                if (car.GetZ - player.GetZ < 200)
-                {
-                    car.Update(dt, curvitureFromZ(car.GetZ));
-                }
+                car.Update(dt, curvitureFromZ(car.GetZ), player.GetZ);
             }
         }
     }
