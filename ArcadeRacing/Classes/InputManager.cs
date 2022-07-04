@@ -7,10 +7,10 @@ namespace ArcadeRacing.Classes
 {
     static class InputManager
     {
-        static public float GetInputX()
+        static public float GetInputX(int player = 0)
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            GamePadState gamePadState = GamePad.GetState(0);
+            GamePadState gamePadState = GamePad.GetState(player);
             if (keyboardState.IsKeyDown(Keys.D))
                 return 1;
             if (keyboardState.IsKeyDown(Keys.A))
@@ -19,10 +19,10 @@ namespace ArcadeRacing.Classes
                 return gamePadState.ThumbSticks.Left.X;
             return 0;
         }
-        static public float GetInputY()
+        static public float GetInputY(int player = 0)
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            GamePadState gamePadState = GamePad.GetState(0);
+            GamePadState gamePadState = GamePad.GetState(player);
             if (keyboardState.IsKeyDown(Keys.W))
                 return 1;
             if (keyboardState.IsKeyDown(Keys.S))
@@ -36,10 +36,10 @@ namespace ArcadeRacing.Classes
             return 0;
 
         }
-        static public bool GetEnter()
+        static public bool GetEnter(int player = 0)
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            GamePadState gamePadState = GamePad.GetState(0);
+            GamePadState gamePadState = GamePad.GetState(player);
             return (keyboardState.IsKeyDown(Keys.Enter) || gamePadState.Buttons.A == ButtonState.Pressed);
         }
     }

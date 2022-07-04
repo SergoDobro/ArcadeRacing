@@ -22,6 +22,8 @@ namespace ArcadeRacing.Classes
         private float k = 0;
         private float totalK = 0;
         private int renderDistance = 500;
+        const float dst = 2.5f;
+        const float strartX = 0.5f;
         public void Start()
         {
             curvetureTotal = 0;
@@ -35,11 +37,23 @@ namespace ArcadeRacing.Classes
             cars?.Clear();
             for (int i = 1; i < 8; i++)
             {
-                AddEnemy(0.75f, i);
-                AddEnemy(-0.75f, i);
+                AddEnemy(strartX, i * dst);
+                AddEnemy(-strartX, i * dst + dst/2);
             }
-            AddEnemy(-0.75f, 0);
-            player.GetX = 0.75f;
+
+            if (GamePad.GetState(1).IsConnected)
+            {
+                Player p2 = new Player() { GetX = -strartX, GetZ = dst / 2, playerId = 1 };
+                cars.Add(p2);
+                gameObjects.Add(p2);
+            }
+            else
+            {
+                AddEnemy(-strartX, dst / 2);
+            }
+
+
+            player.GetX = strartX;
             player.GetZ = 0;
             //gameObjects.Add(player);
 
@@ -80,7 +94,7 @@ namespace ArcadeRacing.Classes
 
             CheckCarToObjectCollision();
 
-            player.Update(dt, segments[0].curveture, player.GetZ);
+            player.Update(dt, curvitureFromZ(player.GetZ), player);
 
             if (Player.CameraZ - prev >= Segment.segmentLength)
             {
@@ -160,7 +174,7 @@ namespace ArcadeRacing.Classes
         {
             foreach (var car in cars)
             {
-                car.Update(dt, curvitureFromZ(car.GetZ), player.GetZ);
+                car.Update(dt, curvitureFromZ(car.GetZ), player);
             }
         }
     }

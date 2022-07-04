@@ -51,9 +51,9 @@ namespace ArcadeRacing.Classes.Cars
             carStateForward = CarStateForward.None;
         }
         const float interpoleSound = 0.12f;
-        public virtual void Update(float dt, float seg0curv, float mainPlayerPosCastile)
+        public virtual void Update(float dt, float seg0curv, Player player)
         {
-            UpdateSounds(mainPlayerPosCastile);
+            UpdateSounds(player.pos_z);
             UpdateDraw(dt);
             if (globalCarState == GlobalCarState.Dead)
                 return;
@@ -91,14 +91,14 @@ namespace ArcadeRacing.Classes.Cars
                 soundPlayer2.Pitch = ((speed / maxSpeed) * 2 - 1) * interpoleSound + soundPlayer2.Pitch * (1 - interpoleSound);
             }
             if (globalCarState == GlobalCarState.InGame)
-                ControlsLogic(dt, seg0curv);
+                ControlsLogic(dt, seg0curv, player);
             if (globalCarState == GlobalCarState.Finished)
             {
                 carStateForward = CarStateForward.None;
                 carStateSides = CarStateSides.None;
             }
         }
-        public virtual void ControlsLogic(float dt, float seg0curv)
+        public virtual void ControlsLogic(float dt, float seg0curv, Player player)
         {
         }
 

@@ -14,29 +14,27 @@ namespace ArcadeRacing.Classes.Cars
     {
         public static float CameraZ;
         public override float GetZ { get => base.GetZ; set => base.GetZ = value; }
-        public override void ControlsLogic(float dt, float seg0curv)
+        public int playerId = 0;
+        public override void ControlsLogic(float dt, float seg0curv, Player player)
         {
-            System.Diagnostics.Debug.WriteLine(pos_x + " " + pos_z);
-            KeyboardState keyboardState = Keyboard.GetState();
-            GamePadState gamePadState = GamePad.GetState(0);
-            if (InputManager.GetInputY() > 0)
+            if (InputManager.GetInputY(playerId) > 0)
             {
                 carStateForward = CarStateForward.Accelerate;
             }
-            else if (InputManager.GetInputY() < 0)
+            else if (InputManager.GetInputY(playerId) < 0)
                 carStateForward = CarStateForward.Decelerate;
             else
                 carStateForward = CarStateForward.None;
 
 
-            if (InputManager.GetInputX() < 0)
+            if (InputManager.GetInputX(playerId) < 0)
             {
-                inputParametr = - InputManager.GetInputX();
+                inputParametr = - InputManager.GetInputX(playerId);
                 carStateSides = CarStateSides.MoveLeft;
             }
-            else if (InputManager.GetInputX() > 0)
+            else if (InputManager.GetInputX(playerId) > 0)
             {
-                inputParametr = InputManager.GetInputX();
+                inputParametr = InputManager.GetInputX(playerId);
                 carStateSides = CarStateSides.MoveRight;
             }
             else
